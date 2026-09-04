@@ -11,7 +11,10 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as ConceptsRouteImport } from './routes/concepts'
+import { Route as DashboardRouteImport } from './routes/dashboard'
+import { Route as ProgressRouteImport } from './routes/progress'
 import { Route as ScenariosRouteImport } from './routes/scenarios'
+import { Route as PlayScenarioIdRouteImport } from './routes/play.$scenarioId'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -23,40 +26,86 @@ const ConceptsRoute = ConceptsRouteImport.update({
   path: '/concepts',
   getParentRoute: () => rootRouteImport,
 } as any)
+const DashboardRoute = DashboardRouteImport.update({
+  id: '/dashboard',
+  path: '/dashboard',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ProgressRoute = ProgressRouteImport.update({
+  id: '/progress',
+  path: '/progress',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ScenariosRoute = ScenariosRouteImport.update({
   id: '/scenarios',
   path: '/scenarios',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PlayScenarioIdRoute = PlayScenarioIdRouteImport.update({
+  id: '/play/$scenarioId',
+  path: '/play/$scenarioId',
   getParentRoute: () => rootRouteImport,
 } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/concepts': typeof ConceptsRoute
+  '/dashboard': typeof DashboardRoute
+  '/progress': typeof ProgressRoute
   '/scenarios': typeof ScenariosRoute
+  '/play/$scenarioId': typeof PlayScenarioIdRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/concepts': typeof ConceptsRoute
+  '/dashboard': typeof DashboardRoute
+  '/progress': typeof ProgressRoute
   '/scenarios': typeof ScenariosRoute
+  '/play/$scenarioId': typeof PlayScenarioIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/concepts': typeof ConceptsRoute
+  '/dashboard': typeof DashboardRoute
+  '/progress': typeof ProgressRoute
   '/scenarios': typeof ScenariosRoute
+  '/play/$scenarioId': typeof PlayScenarioIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/concepts' | '/scenarios'
+  fullPaths:
+    | '/'
+    | '/concepts'
+    | '/dashboard'
+    | '/progress'
+    | '/scenarios'
+    | '/play/$scenarioId'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/concepts' | '/scenarios'
-  id: '__root__' | '/' | '/concepts' | '/scenarios'
+  to:
+    | '/'
+    | '/concepts'
+    | '/dashboard'
+    | '/progress'
+    | '/scenarios'
+    | '/play/$scenarioId'
+  id:
+    | '__root__'
+    | '/'
+    | '/concepts'
+    | '/dashboard'
+    | '/progress'
+    | '/scenarios'
+    | '/play/$scenarioId'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   ConceptsRoute: typeof ConceptsRoute
+  DashboardRoute: typeof DashboardRoute
+  ProgressRoute: typeof ProgressRoute
   ScenariosRoute: typeof ScenariosRoute
+  PlayScenarioIdRoute: typeof PlayScenarioIdRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -75,11 +124,32 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ConceptsRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/dashboard': {
+      id: '/dashboard'
+      path: '/dashboard'
+      fullPath: '/dashboard'
+      preLoaderRoute: typeof DashboardRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/progress': {
+      id: '/progress'
+      path: '/progress'
+      fullPath: '/progress'
+      preLoaderRoute: typeof ProgressRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/scenarios': {
       id: '/scenarios'
       path: '/scenarios'
       fullPath: '/scenarios'
       preLoaderRoute: typeof ScenariosRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/play/$scenarioId': {
+      id: '/play/$scenarioId'
+      path: '/play/$scenarioId'
+      fullPath: '/play/$scenarioId'
+      preLoaderRoute: typeof PlayScenarioIdRouteImport
       parentRoute: typeof rootRouteImport
     }
   }
@@ -88,7 +158,10 @@ declare module '@tanstack/react-router' {
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   ConceptsRoute: ConceptsRoute,
+  DashboardRoute: DashboardRoute,
+  ProgressRoute: ProgressRoute,
   ScenariosRoute: ScenariosRoute,
+  PlayScenarioIdRoute: PlayScenarioIdRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
