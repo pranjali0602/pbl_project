@@ -29,10 +29,10 @@ function Landing() {
         <div className="mx-auto flex max-w-6xl items-center justify-between px-4 py-3">
           <span className="font-display text-2xl tracking-wide text-ink">PAISA.BOOM</span>
           <Link
-            to="/scenarios"
+            to="/financial-twin"
             className="press neo bg-hot px-4 py-2 font-display text-lg tracking-wide text-paper"
           >
-            PLAY NOW
+            CREATE MY TWIN
           </Link>
         </div>
       </header>
@@ -48,21 +48,20 @@ function Landing() {
             BY <span className="bg-hot px-2 text-paper">LIVING</span> IT.
           </h1>
           <p className="mt-6 max-w-xl text-lg font-medium text-ink">
-            No textbooks. No lectures. Just messy, real situations — a paycheck, a friend's crypto
-            tip, a ₹79,000 phone — and the consequences of whatever you pick.
+            Build your financial twin and get a learning journey designed around you.
           </p>
           <div className="mt-8 flex flex-wrap gap-4">
             <Link
-              to="/scenarios"
+              to="/financial-twin"
               className="press neo-lg bg-ink px-8 py-4 font-display text-2xl tracking-wide text-acid"
             >
-              START A SCENARIO
+              CREATE MY FINANCIAL TWIN →
             </Link>
             <Link
-              to="/concepts"
+              to="/scenarios"
               className="press neo bg-paper px-6 py-4 font-display text-2xl tracking-wide text-ink"
             >
-              BROWSE CONCEPTS
+              EXPLORE SCENARIOS
             </Link>
           </div>
         </div>

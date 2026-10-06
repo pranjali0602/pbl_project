@@ -43,7 +43,7 @@ export const LEVEL_NAMES = [
 ];
 
 export function levelName(level: number) {
-  return LEVEL_NAMES[Math.min(level - 1, LEVEL_NAMES.length - 1)];
+  return LEVEL_NAMES[Math.min(level - 1, LEVEL_NAMES.length - 1)] ?? "Money Rookie";
 }
 
 function read(): Progress {

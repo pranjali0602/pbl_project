@@ -1,6 +1,7 @@
 import { Link } from "@tanstack/react-router";
 
 const links = [
+  { to: "/financial-twin", label: "Twin" },
   { to: "/scenarios", label: "Scenarios" },
   { to: "/dashboard", label: "Dashboard" },
   { to: "/concepts", label: "Concepts" },
