@@ -34,8 +34,9 @@ const inr = (n: number) =>
 
 function Play() {
   const { scenarioId } = Route.useParams();
-  const scenario = SCENARIOS.find((s) => s.id === scenarioId);
-  if (!scenario) throw notFound();
+  const foundScenario = SCENARIOS.find((s) => s.id === scenarioId);
+  if (!foundScenario) throw notFound();
+  const scenario = foundScenario;
 
   const { update } = useProgress();
   const [step, setStep] = useState(0);
@@ -46,8 +47,9 @@ function Play() {
   const [traits, setTraits] = useState<Trait[]>([]);
   const [done, setDone] = useState(false);
 
-  const situation = scenario.situations[step];
-  const concept = situation ? conceptById(situation.conceptId) : undefined;
+  const situation = scenario.situations[step] ?? scenario.situations[0];
+  if (!situation) throw notFound();
+  const concept = conceptById(situation.conceptId);
 
   function choose(c: Choice) {
     setPicked(c);
@@ -157,9 +159,9 @@ function Play() {
           </div>
         ) : (
           <div className="mt-6 space-y-4">
-            <div className={`neo p-5 ${VERDICT[picked.verdict].bg}`}>
+            <div className={`neo p-5 ${VERDICT[picked.verdict]?.bg ?? VERDICT.okay?.bg}`}>
               <p className="font-mono text-xs uppercase tracking-[0.3em]">
-                {VERDICT[picked.verdict].label}
+                {VERDICT[picked.verdict]?.label ?? "MIXED BAG"}
               </p>
               <p className="mt-2 font-display text-3xl leading-none tracking-wide">
                 {picked.reaction}
