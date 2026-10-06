@@ -12,6 +12,7 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as ConceptsRouteImport } from './routes/concepts'
 import { Route as DashboardRouteImport } from './routes/dashboard'
+import { Route as FinancialTwinRouteImport } from './routes/financial-twin'
 import { Route as ProgressRouteImport } from './routes/progress'
 import { Route as ScenariosRouteImport } from './routes/scenarios'
 import { Route as PlayScenarioIdRouteImport } from './routes/play.$scenarioId'
@@ -29,6 +30,11 @@ const ConceptsRoute = ConceptsRouteImport.update({
 const DashboardRoute = DashboardRouteImport.update({
   id: '/dashboard',
   path: '/dashboard',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const FinancialTwinRoute = FinancialTwinRouteImport.update({
+  id: '/financial-twin',
+  path: '/financial-twin',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ProgressRoute = ProgressRouteImport.update({
@@ -51,6 +57,7 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/concepts': typeof ConceptsRoute
   '/dashboard': typeof DashboardRoute
+  '/financial-twin': typeof FinancialTwinRoute
   '/progress': typeof ProgressRoute
   '/scenarios': typeof ScenariosRoute
   '/play/$scenarioId': typeof PlayScenarioIdRoute
@@ -59,6 +66,7 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/concepts': typeof ConceptsRoute
   '/dashboard': typeof DashboardRoute
+  '/financial-twin': typeof FinancialTwinRoute
   '/progress': typeof ProgressRoute
   '/scenarios': typeof ScenariosRoute
   '/play/$scenarioId': typeof PlayScenarioIdRoute
@@ -68,6 +76,7 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/concepts': typeof ConceptsRoute
   '/dashboard': typeof DashboardRoute
+  '/financial-twin': typeof FinancialTwinRoute
   '/progress': typeof ProgressRoute
   '/scenarios': typeof ScenariosRoute
   '/play/$scenarioId': typeof PlayScenarioIdRoute
@@ -78,6 +87,7 @@ export interface FileRouteTypes {
     | '/'
     | '/concepts'
     | '/dashboard'
+    | '/financial-twin'
     | '/progress'
     | '/scenarios'
     | '/play/$scenarioId'
@@ -86,6 +96,7 @@ export interface FileRouteTypes {
     | '/'
     | '/concepts'
     | '/dashboard'
+    | '/financial-twin'
     | '/progress'
     | '/scenarios'
     | '/play/$scenarioId'
@@ -94,6 +105,7 @@ export interface FileRouteTypes {
     | '/'
     | '/concepts'
     | '/dashboard'
+    | '/financial-twin'
     | '/progress'
     | '/scenarios'
     | '/play/$scenarioId'
@@ -103,6 +115,7 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   ConceptsRoute: typeof ConceptsRoute
   DashboardRoute: typeof DashboardRoute
+  FinancialTwinRoute: typeof FinancialTwinRoute
   ProgressRoute: typeof ProgressRoute
   ScenariosRoute: typeof ScenariosRoute
   PlayScenarioIdRoute: typeof PlayScenarioIdRoute
@@ -129,6 +142,13 @@ declare module '@tanstack/react-router' {
       path: '/dashboard'
       fullPath: '/dashboard'
       preLoaderRoute: typeof DashboardRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/financial-twin': {
+      id: '/financial-twin'
+      path: '/financial-twin'
+      fullPath: '/financial-twin'
+      preLoaderRoute: typeof FinancialTwinRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/progress': {
@@ -159,6 +179,7 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   ConceptsRoute: ConceptsRoute,
   DashboardRoute: DashboardRoute,
+  FinancialTwinRoute: FinancialTwinRoute,
   ProgressRoute: ProgressRoute,
   ScenariosRoute: ScenariosRoute,
   PlayScenarioIdRoute: PlayScenarioIdRoute,
