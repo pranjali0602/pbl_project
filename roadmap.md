@@ -1,11 +1,11 @@
 # Roadmap
 
 ## Current update
-- [ ] Add Financial Twin intro and two-step creation flow
-- [ ] Add mocked prediction, animated build state, result, and recommendation
-- [ ] Connect recommendation to existing scenario gameplay
-- [ ] Add compact Financial Twin summary to dashboard
-- [ ] Update landing CTA while preserving scenario access
+- [x] Add Financial Twin intro and two-step creation flow
+- [x] Add mocked prediction, animated build state, result, and recommendation
+- [x] Connect recommendation to existing scenario gameplay
+- [x] Add compact Financial Twin summary to dashboard
+- [x] Update landing CTA while preserving scenario access
 - [ ] Verify responsive flow and existing gameplay
 
 ## Existing experience

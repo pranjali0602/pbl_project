@@ -159,7 +159,7 @@ function Play() {
           </div>
         ) : (
           <div className="mt-6 space-y-4">
-            <div className={`neo p-5 ${VERDICT[picked.verdict]?.bg ?? VERDICT.okay?.bg}`}>
+            <div className={`neo p-5 ${VERDICT[picked.verdict]?.bg ?? VERDICT["okay"]?.bg}`}>
               <p className="font-mono text-xs uppercase tracking-[0.3em]">
                 {VERDICT[picked.verdict]?.label ?? "MIXED BAG"}
               </p>

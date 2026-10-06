@@ -312,7 +312,7 @@ function TwinResult({ twin, onRebuild }: { twin: FinancialTwin; onRebuild: () =>
       </section>
 
       <section className="mt-10 grid gap-10 lg:grid-cols-2">
-        <div><h2 className="font-display text-4xl tracking-wide text-acid">YOUR MONEY PATTERNS</h2><div className="mt-5 space-y-5">{patterns.map(([label, score]) => <div key={label}><div className="mb-2 flex justify-between font-mono text-xs uppercase tracking-wider text-paper"><span>{label}</span><span>{score}/10</span></div><div className="h-5 border-4 border-paper"><div className="h-full bg-neon" style={{ width: `${score * 10}%` }} /></div></div>)}</div>
+        <div><h2 className="font-display text-4xl tracking-wide text-acid">YOUR MONEY PATTERNS</h2><div className="mt-5 space-y-5">{patterns.map(([label, score]) => <div key={label}><div className="mb-2 flex justify-between font-mono text-xs uppercase tracking-wider text-paper"><span>{label}</span><span>{score}/10</span></div><div className="h-5 border-4 border-paper"><div className="h-full bg-neon" style={{ width: `${score * 10}%` }} /></div></div>)}</div></div>
         <div><h2 className="font-display text-4xl tracking-wide text-acid">YOUR MONEY PERSONALITY</h2><div className="mt-5 border-l-8 border-neon pl-5"><p className="font-mono text-xs uppercase tracking-widest text-paper/50">Strength</p><p className="mt-1 text-xl font-semibold text-paper">You're showing a balanced approach to saving and spending.</p></div><div className="mt-6 border-l-8 border-hot pl-5"><p className="font-mono text-xs uppercase tracking-widest text-paper/50">Growth area</p><p className="mt-1 text-xl font-semibold text-paper">Strengthen your long-term investment planning.</p></div></div>
       </section>
 
