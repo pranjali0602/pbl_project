@@ -1,7 +1,9 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
+import { useEffect, useState } from "react";
 import { Shell } from "@/components/Nav";
 import { SCENARIOS } from "@/data/scenarios";
 import { levelFor, levelName, topTrait, useProgress } from "@/lib/progress";
+import { readFinancialTwin, type FinancialTwin } from "@/lib/financial-twin";
 
 export const Route = createFileRoute("/dashboard")({
   head: () => ({
@@ -33,6 +35,8 @@ const TRAIT_COPY: Record<string, string> = {
 
 function Dashboard() {
   const { progress, ready, reset } = useProgress();
+  const [twin, setTwin] = useState<FinancialTwin | null>(null);
+  useEffect(() => setTwin(readFinancialTwin()), []);
   const { level, into, pct } = levelFor(progress.xp);
   const trait = topTrait(progress.traits);
   const nextScenario =
@@ -42,7 +46,41 @@ function Dashboard() {
     <Shell>
       <h1 className="font-display text-6xl tracking-wide text-paper sm:text-8xl">DASHBOARD</h1>
 
-      <div className="mt-8 grid gap-6 lg:grid-cols-3">
+      <div className="neo mt-8 grid gap-6 bg-neon p-6 text-ink md:grid-cols-[1fr_auto] md:items-end">
+        <div>
+          <p className="font-mono text-xs uppercase tracking-[0.3em]">Your Financial Twin</p>
+          <h2 className="mt-1 font-display text-5xl tracking-wide">
+            {twin?.profile.toUpperCase() ?? "NOT BUILT YET"}
+          </h2>
+          <p className="mt-1 font-mono text-xs uppercase tracking-widest">
+            {twin ? `${Math.round(twin.confidence * 100)}% confidence` : "Meet your money decision double"}
+          </p>
+        </div>
+        <Link
+          to="/financial-twin"
+          className="press neo bg-ink px-5 py-3 text-center font-display text-xl tracking-wide text-acid"
+        >
+          {twin ? "VIEW MY TWIN →" : "CREATE MY TWIN →"}
+        </Link>
+      </div>
+
+      {twin && (
+        <div className="mt-6 flex flex-wrap items-center justify-between gap-4 border-4 border-acid p-5 text-paper">
+          <div>
+            <p className="font-mono text-xs uppercase tracking-[0.3em] text-acid">Next challenge</p>
+            <p className="font-display text-2xl tracking-wide">{twin.recommendedScenario}</p>
+          </div>
+          <Link
+            to="/play/$scenarioId"
+            params={{ scenarioId: twin.recommendedScenarioId }}
+            className="border-4 border-acid bg-acid px-5 py-2 font-display text-xl tracking-wide text-ink"
+          >
+            PLAY →
+          </Link>
+        </div>
+      )}
+
+      <div className="mt-6 grid gap-6 lg:grid-cols-3">
         <div className="neo bg-hot p-6 text-paper lg:col-span-2">
           <p className="font-mono text-xs uppercase tracking-[0.3em]">Level {level}</p>
           <h2 className="font-display text-5xl leading-none tracking-wide">
@@ -84,7 +122,7 @@ function Dashboard() {
         </p>
       </div>
 
-      <div className="neo mt-6 bg-neon p-6 text-ink">
+      {nextScenario && <div className="neo mt-6 bg-neon p-6 text-ink">
         <p className="font-mono text-xs uppercase tracking-[0.3em]">Recommended next</p>
         <h2 className="mt-1 font-display text-4xl leading-none tracking-wide">
           {nextScenario.emoji} {nextScenario.title}
@@ -97,7 +135,7 @@ function Dashboard() {
         >
           PLAY IT
         </Link>
-      </div>
+      </div>}
 
       <button
         onClick={reset}
