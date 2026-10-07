@@ -7,6 +7,10 @@
 - [x] Add compact Financial Twin summary to dashboard
 - [x] Update landing CTA while preserving scenario access
 - [ ] Verify responsive flow and existing gameplay
+- [ ] Upgrade the Twin into a layered digital identity visual
+- [ ] Polish result hierarchy and reduce repetitive boxes
+- [ ] Add Financial Twin Score and evolution indicator
+- [ ] Verify the polished result across desktop and mobile
 
 ## Existing experience
 - [x] Landing page
