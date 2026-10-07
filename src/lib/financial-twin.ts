@@ -45,6 +45,18 @@ export function scoresFromAnswers(answers: DecisionAnswers): MoneyPattern {
   };
 }
 
+export function financialTwinScore(twin: FinancialTwin) {
+  const behaviourAverage =
+    (twin.savingBehavior +
+      (10 - twin.spendingBehavior) +
+      (10 - Math.abs(twin.riskTolerance - 5)) +
+      twin.investmentBehavior +
+      twin.planningBehavior) /
+    5;
+  const cashFlow = Math.max(0, Math.min(10, ((twin.income - twin.monthlyExpenses) / twin.income) * 20));
+  return Math.round(Math.max(0, Math.min(100, behaviourAverage * 8 + cashFlow * 2)));
+}
+
 const STORAGE_KEY = "paisaboom.financial-twin.v1";
 
 export function saveFinancialTwin(twin: FinancialTwin) {
