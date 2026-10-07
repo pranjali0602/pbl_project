@@ -171,3 +171,12 @@
     color: var(--color-ink);
   }
 }
+
+@keyframes twin-spin { to { transform: rotate(360deg); } }
+@keyframes twin-float { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-6px); } }
+@keyframes twin-bar { 0%,100% { transform: scaleY(1); } 50% { transform: scaleY(0.7); } }
+.twin-spin { animation: twin-spin 40s linear infinite; }
+.twin-spin-rev { animation: twin-spin 60s linear infinite reverse; }
+.twin-float { animation: twin-float 5s ease-in-out infinite; }
+.twin-bar { animation: twin-bar 2.4s ease-in-out infinite; }
+@media (prefers-reduced-motion: reduce) { .twin-spin, .twin-spin-rev, .twin-float, .twin-bar { animation: none; } }

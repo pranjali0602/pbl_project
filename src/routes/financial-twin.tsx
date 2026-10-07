@@ -344,9 +344,9 @@ function TwinResult({ twin, onRebuild }: { twin: FinancialTwin; onRebuild: () =>
   const money = (value: number) => value >= 1000 ? `₹${+(value / 1000).toFixed(1)}K` : `₹${value}`;
   const twinScore = financialTwinScore(twin);
   const patterns = [
-    ["Saving", twin.savingBehavior, "neon"], ["Spending", twin.spendingBehavior, "hot"],
-    ["Risk", twin.riskTolerance, "acid"], ["Investment", twin.investmentBehavior, "neon"],
-    ["Planning", twin.planningBehavior, "acid"],
+    ["Saving", twin.savingBehavior, "bg-neon"], ["Spending", twin.spendingBehavior, "bg-hot"],
+    ["Risk", twin.riskTolerance, "bg-acid"], ["Investment", twin.investmentBehavior, "bg-neon"],
+    ["Planning", twin.planningBehavior, "bg-acid"],
   ] as const;
   const Rule = () => <div className="my-14 h-px w-full bg-paper/20 sm:my-20" />;
   return (
@@ -385,7 +385,7 @@ function TwinResult({ twin, onRebuild }: { twin: FinancialTwin; onRebuild: () =>
             {patterns.map(([label, score, col]) => (
               <div key={label} className="grid grid-cols-[90px_1fr_40px] items-center gap-3 font-mono text-xs uppercase tracking-wider text-paper sm:grid-cols-[120px_1fr_48px]">
                 <span>{label}</span>
-                <div className="flex gap-1">{[...Array(10)].map((_, i) => <span key={i} className={`h-4 flex-1 ${i < score ? `bg-${col}` : "bg-paper/15"}`} />)}</div>
+                <div className="flex gap-1">{[...Array(10)].map((_, i) => <span key={i} className={`h-4 flex-1 ${i < score ? col : "bg-paper/15"}`} />)}</div>
                 <span className="text-right text-paper/60">{score}/10</span>
               </div>
             ))}
