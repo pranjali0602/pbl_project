@@ -275,66 +275,156 @@ function StepHeader({ step, title, copy }: { step: string; title: string; copy: 
   return <div><p className="font-mono text-xs uppercase tracking-[0.3em] text-acid">{step}</p><h1 className="mt-2 font-display text-5xl leading-none tracking-wide text-paper sm:text-7xl">{title}</h1><p className="mt-4 max-w-xl font-medium text-paper/70">{copy}</p></div>;
 }
 
-function TwinAvatar() {
+function TwinAvatar({ twin }: { twin?: FinancialTwin }) {
+  const c = (n: string) => `var(--color-${n})`;
+  // pixel face: 0 empty, 1 skin, 2 eye, 3 mouth, 4 hair/visor
+  const face = [
+    "00444444440",
+    "04444444444",
+    "41111111114",
+    "41221112214",
+    "41221112214",
+    "41111111114",
+    "41111111114",
+    "41133333114",
+    "04111111140",
+    "00411111400",
+  ];
+  const colors: Record<string, string> = { "1": c("hot"), "2": c("acid"), "3": c("ink"), "4": c("neon") };
+  const px = 14;
+  const ox = 200 - (11 * px) / 2;
+  const oy = 200 - (10 * px) / 2 - 4;
+  const signals = [
+    { label: "SAVE", v: twin?.savingBehavior ?? 7, x: 30, y: 70, col: "neon", d: "0s" },
+    { label: "SPEND", v: twin?.spendingBehavior ?? 4, x: 300, y: 50, col: "hot", d: "1.2s" },
+    { label: "RISK", v: twin?.riskTolerance ?? 5, x: 318, y: 300, col: "acid", d: "2.1s" },
+    { label: "INVEST", v: twin?.investmentBehavior ?? 6, x: 18, y: 320, col: "neon", d: "0.6s" },
+  ];
   return (
-    <div className="relative mx-auto aspect-square w-full max-w-[330px]">
-      <div className="absolute inset-4 rotate-6 border-4 border-neon" />
-      <div className="absolute inset-9 -rotate-6 border-4 border-hot" />
-      <div className="absolute left-0 top-12 h-16 w-6 bg-acid" />
-      <div className="absolute bottom-10 right-0 h-6 w-20 bg-neon" />
-      <div className="absolute left-1/2 top-1/2 grid h-52 w-48 -translate-x-1/2 -translate-y-1/2 place-items-center border-8 border-paper bg-electric shadow-[12px_12px_0_0_var(--color-hot)]">
-        <div className="absolute -right-4 -top-4 flex items-center gap-2 border-4 border-ink bg-acid px-2 py-1 font-mono text-[9px] uppercase tracking-wider text-ink"><span className="h-2 w-2 animate-pulse bg-hot" />Live twin</div>
-        <div className="relative h-32 w-32 border-8 border-ink bg-hot">
-          <div className="absolute left-4 top-7 h-7 w-7 border-4 border-ink bg-acid"><span className="absolute left-1 top-1 h-2 w-2 bg-paper" /></div>
-          <div className="absolute right-4 top-7 h-7 w-7 border-4 border-ink bg-acid"><span className="absolute left-1 top-1 h-2 w-2 bg-paper" /></div>
-          <div className="absolute bottom-5 left-1/2 h-4 w-14 -translate-x-1/2 border-b-4 border-ink" />
-        </div>
-        <div className="absolute bottom-2 left-3 flex gap-1">{[3, 5, 8, 6, 9].map((height, index) => <span key={index} className="w-2 bg-neon" style={{ height: `${height}px` }} />)}</div>
-      </div>
-      <span className="absolute bottom-2 left-2 border-4 border-ink bg-acid px-4 py-2 font-display text-2xl text-ink">₹ YOU 2.0</span>
+    <div className="relative mx-auto aspect-square w-full max-w-[520px]">
+      <svg viewBox="0 0 400 400" className="h-full w-full overflow-visible" aria-label="Your digital financial twin">
+        <circle cx="200" cy="200" r="190" fill="none" stroke={c("paper")} strokeOpacity="0.12" strokeWidth="1" />
+        <g className="twin-spin" style={{ transformOrigin: "200px 200px" }}>
+          <circle cx="200" cy="200" r="165" fill="none" stroke={c("neon")} strokeWidth="2" strokeDasharray="4 10" />
+          <circle cx="365" cy="200" r="7" fill={c("acid")} />
+          <circle cx="35" cy="200" r="4" fill={c("hot")} />
+        </g>
+        <g className="twin-spin-rev" style={{ transformOrigin: "200px 200px" }}>
+          <path d="M 70 200 A 130 130 0 0 1 330 200" fill="none" stroke={c("hot")} strokeWidth="6" strokeLinecap="square" strokeDasharray="60 18" />
+        </g>
+        {/* data ring from twin scores */}
+        {[...Array(40)].map((_, i) => {
+          const a = (i / 40) * Math.PI * 2;
+          const len = 6 + ((i * 7) % 11);
+          const r1 = 112;
+          return <line key={i} x1={200 + Math.cos(a) * r1} y1={200 + Math.sin(a) * r1} x2={200 + Math.cos(a) * (r1 + len)} y2={200 + Math.sin(a) * (r1 + len)} stroke={i % 5 === 0 ? c("acid") : c("paper")} strokeOpacity={i % 5 === 0 ? 1 : 0.35} strokeWidth="3" />;
+        })}
+        <circle cx="200" cy="200" r="100" fill={c("electric")} stroke={c("paper")} strokeWidth="4" />
+        <g style={{ filter: `drop-shadow(6px 6px 0 ${c("ink")})` }}>
+          {face.flatMap((row, y) => row.split("").map((v, x) => v === "0" ? null : <rect key={`${x}-${y}`} x={ox + x * px} y={oy + y * px} width={px} height={px} fill={colors[v]} />))}
+          <rect x={ox + 2 * px + 3} y={oy + 3 * px + 3} width="6" height="6" fill={c("paper")} />
+          <rect x={ox + 7 * px + 3} y={oy + 3 * px + 3} width="6" height="6" fill={c("paper")} />
+        </g>
+        {signals.map((s) => (
+          <g key={s.label} className="twin-float" style={{ animationDelay: s.d }}>
+            <line x1={s.x + 30} y1={s.y + 10} x2="200" y2="200" stroke={c(s.col)} strokeOpacity="0.35" strokeDasharray="2 5" />
+            <text x={s.x} y={s.y} fill={c(s.col)} fontFamily="monospace" fontSize="11" letterSpacing="2">{s.label}</text>
+            {[0, 1, 2, 3, 4].map((b) => <rect key={b} className="twin-bar" style={{ animationDelay: `${b * 0.15}s`, transformOrigin: `0 ${s.y + 22}px` }} x={s.x + b * 9} y={s.y + 22 - (b < Math.ceil(s.v / 2) ? 6 + b * 3 : 4)} width="6" height={b < Math.ceil(s.v / 2) ? 6 + b * 3 : 4} fill={b < Math.ceil(s.v / 2) ? c(s.col) : c("paper")} fillOpacity={b < Math.ceil(s.v / 2) ? 1 : 0.25} />)}
+            <text x={s.x + 50} y={s.y + 22} fill={c("paper")} fontFamily="monospace" fontSize="10">{s.v}/10</text>
+          </g>
+        ))}
+      </svg>
+      <span className="absolute right-[6%] top-[42%] flex items-center gap-2 bg-ink px-2 py-1 font-mono text-[10px] uppercase tracking-widest text-acid"><span className="h-2 w-2 animate-pulse rounded-full bg-neon" />Live twin</span>
+      <span className="absolute bottom-[6%] left-1/2 -translate-x-1/2 -rotate-3 bg-acid px-4 py-1 font-display text-2xl tracking-wide text-ink shadow-[4px_4px_0_0_var(--color-hot)]">YOU 2.0</span>
     </div>
   );
 }
 
 function TwinResult({ twin, onRebuild }: { twin: FinancialTwin; onRebuild: () => void }) {
-  const money = (value: number) => `₹${value.toLocaleString("en-IN")}`;
+  const money = (value: number) => value >= 1000 ? `₹${+(value / 1000).toFixed(1)}K` : `₹${value}`;
   const twinScore = financialTwinScore(twin);
   const patterns = [
-    ["Saving tendency", twin.savingBehavior], ["Spending tendency", twin.spendingBehavior],
-    ["Risk approach", twin.riskTolerance], ["Investment approach", twin.investmentBehavior],
-    ["Planning style", twin.planningBehavior],
+    ["Saving", twin.savingBehavior, "bg-neon"], ["Spending", twin.spendingBehavior, "bg-hot"],
+    ["Risk", twin.riskTolerance, "bg-acid"], ["Investment", twin.investmentBehavior, "bg-neon"],
+    ["Planning", twin.planningBehavior, "bg-acid"],
   ] as const;
+  const Rule = () => <div className="my-14 h-px w-full bg-paper/20 sm:my-20" />;
   return (
     <Shell>
-      <section className="grid-noise bg-electric px-5 py-10 text-paper sm:px-10 sm:py-14">
-        <p className="font-mono text-xs uppercase tracking-[0.3em] text-acid">Profile unlocked · digital identity active</p>
-        <div className="mt-6 grid items-center gap-10 md:grid-cols-[300px_1fr]">
-          <TwinAvatar />
-          <div><h1 className="font-display text-5xl leading-[0.9] tracking-wide sm:text-7xl">MEET YOUR<br />FINANCIAL TWIN</h1><p className="mt-8 font-mono text-xs uppercase tracking-[0.3em] text-paper/60">Your money type</p><p className="font-display text-7xl leading-none tracking-wide text-acid sm:text-8xl">{twin.profile.toUpperCase()}</p><p className="mt-3 font-mono text-xs uppercase tracking-[0.25em] text-paper/70">{Math.round(twin.confidence * 100)}% model confidence</p></div>
+      <section className="text-center text-paper">
+        <p className="font-mono text-xs uppercase tracking-[0.35em] text-acid">Profile unlocked</p>
+        <p className="mt-1 font-mono text-[10px] uppercase tracking-[0.35em] text-paper/50">Digital identity active</p>
+        <div className="mt-4"><TwinAvatar twin={twin} /></div>
+        <h1 className="mt-6 font-display text-5xl leading-[0.9] tracking-wide sm:text-7xl">MEET YOUR<br />FINANCIAL TWIN</h1>
+        <p className="mt-10 font-mono text-xs uppercase tracking-[0.3em] text-paper/60">Your money type</p>
+        <p className="font-display text-7xl leading-none tracking-wide text-acid sm:text-9xl">{twin.profile.toUpperCase()}</p>
+        <p className="mt-3 font-mono text-xs uppercase tracking-[0.25em] text-paper/60">{Math.round(twin.confidence * 100)}% model confidence</p>
+        <p className="mt-8 font-display text-2xl tracking-wide text-neon">YOUR TWIN EVOLVES AS YOU PLAY.</p>
+        <p className="mx-auto mt-1 max-w-md text-sm text-paper/60">Every financial decision you make helps PAISA.BOOM understand your behaviour better.</p>
+      </section>
+
+      <Rule />
+      <section>
+        <h2 className="font-display text-3xl tracking-wide text-acid sm:text-4xl">YOUR FINANCIAL SNAPSHOT</h2>
+        <div className="mt-6 grid grid-cols-2 gap-y-6 md:grid-cols-4">
+          {[["Income", twin.income], ["Expenses", twin.monthlyExpenses], ["Savings", twin.savings], ["Debt", twin.debt]].map(([label, value], i) => (
+            <div key={label as string} className={`px-4 ${i % 2 ? "border-l border-paper/25" : ""} ${i === 2 ? "md:border-l md:border-paper/25" : ""}`}>
+              <p className="font-display text-4xl tracking-wide text-paper sm:text-5xl">{money(value as number)}</p>
+              <p className="mt-1 font-mono text-[10px] uppercase tracking-widest text-paper/50">{label}</p>
+            </div>
+          ))}
         </div>
-        <div className="mt-10 border-t-4 border-paper/30 pt-5"><p className="font-display text-2xl tracking-wide text-neon">YOUR TWIN EVOLVES AS YOU PLAY.</p><p className="mt-1 max-w-2xl text-sm text-paper/70">Every financial decision you make helps PAISA.BOOM understand your behaviour better.</p></div>
       </section>
 
-      <section className="mt-14 border-b-4 border-paper/30 pb-10">
-        <h2 className="font-display text-4xl tracking-wide text-acid">YOUR FINANCIAL SNAPSHOT</h2>
-        <div className="mt-6 grid grid-cols-2 border-y-2 border-paper/30 md:grid-cols-4">
-          {[["Income", twin.income], ["Expenses", twin.monthlyExpenses], ["Savings", twin.savings], ["Debt", twin.debt]].map(([label, value], index) => <div key={label} className={`px-3 py-5 sm:px-5 ${index > 0 ? "md:border-l-2 md:border-paper/30" : ""} ${index % 2 ? "border-l-2 border-paper/30" : ""}`}><p className="font-display text-2xl tracking-wide text-paper sm:text-4xl">{money(value as number)}</p><p className="mt-1 font-mono text-[10px] uppercase tracking-widest text-paper/50">{label}</p></div>)}
+      <Rule />
+      <section className="grid gap-14 lg:grid-cols-[1.3fr_0.7fr]">
+        <div>
+          <h2 className="font-display text-3xl tracking-wide text-acid sm:text-4xl">YOUR MONEY PATTERNS</h2>
+          <p className="mt-1 text-sm text-paper/50">Signals from your financial snapshot and decisions.</p>
+          <div className="mt-8 space-y-4">
+            {patterns.map(([label, score, col]) => (
+              <div key={label} className="grid grid-cols-[90px_1fr_40px] items-center gap-3 font-mono text-xs uppercase tracking-wider text-paper sm:grid-cols-[120px_1fr_48px]">
+                <span>{label}</span>
+                <div className="flex gap-1">{[...Array(10)].map((_, i) => <span key={i} className={`h-4 flex-1 ${i < score ? col : "bg-paper/15"}`} />)}</div>
+                <span className="text-right text-paper/60">{score}/10</span>
+              </div>
+            ))}
+          </div>
+        </div>
+        <div className="border-l-4 border-hot pl-6">
+          <p className="font-mono text-xs uppercase tracking-[0.3em] text-paper/60">Financial twin score</p>
+          <div className="mt-2 flex items-end gap-2"><span className="font-display text-8xl leading-none text-neon">{twinScore}</span><span className="pb-2 font-display text-3xl text-paper/40">/ 100</span></div>
+          <div className="mt-3 h-1.5 bg-paper/15"><div className="h-full bg-hot" style={{ width: `${twinScore}%` }} /></div>
+          <p className="mt-4 font-semibold text-paper">Your starting financial behaviour score</p>
+          <p className="mt-1 text-sm text-paper/50">This is a starting snapshot — your Twin evolves as you make decisions.</p>
         </div>
       </section>
 
-      <section className="mt-12 grid gap-12 lg:grid-cols-[1.25fr_0.75fr]">
-        <div><h2 className="font-display text-4xl tracking-wide text-acid">YOUR MONEY PATTERNS</h2><p className="mt-1 text-sm text-paper/50">Signals from your financial snapshot and decisions.</p><div className="mt-6 space-y-5">{patterns.map(([label, score]) => <div key={label}><div className="mb-2 flex justify-between font-mono text-xs uppercase tracking-wider text-paper"><span>{label}</span><span>{score}/10</span></div><div className="h-3 bg-paper/15"><div className="h-full bg-neon" style={{ width: `${score * 10}%` }} /></div></div>)}</div></div>
-        <div><h2 className="font-display text-4xl tracking-wide text-acid">FINANCIAL TWIN SCORE</h2><div className="mt-5 flex items-end gap-2"><span className="font-display text-8xl leading-none text-neon">{twinScore}</span><span className="pb-2 font-display text-3xl text-paper/40">/ 100</span></div><div className="mt-4 h-4 border-2 border-paper"><div className="h-full bg-hot" style={{ width: `${twinScore}%` }} /></div><p className="mt-4 font-semibold text-paper">Your starting financial behaviour score</p><p className="mt-1 text-sm text-paper/50">This is a starting snapshot — your Twin evolves as you make decisions.</p></div>
+      <Rule />
+      <section>
+        <h2 className="font-display text-3xl tracking-wide text-acid sm:text-4xl">YOUR MONEY PERSONALITY</h2>
+        <div className="mt-8 grid gap-10 md:grid-cols-2">
+          <div><p className="flex items-center gap-3 font-mono text-xs uppercase tracking-widest text-neon"><span className="h-0.5 w-8 bg-neon" />Strength</p><p className="mt-3 font-display text-3xl leading-tight tracking-wide text-paper">Balanced saving + spending behaviour</p></div>
+          <div><p className="flex items-center gap-3 font-mono text-xs uppercase tracking-widest text-hot"><span className="h-0.5 w-8 bg-hot" />Growth area</p><p className="mt-3 font-display text-3xl leading-tight tracking-wide text-paper">Long-term investment planning</p></div>
+        </div>
       </section>
 
-      <section className="mt-14 border-y-2 border-paper/30 py-10"><h2 className="font-display text-4xl tracking-wide text-acid">YOUR MONEY PERSONALITY</h2><div className="mt-6 grid gap-8 md:grid-cols-2"><div className="border-l-8 border-neon pl-5"><p className="font-mono text-xs uppercase tracking-widest text-neon">✦ Strength</p><p className="mt-2 text-xl font-semibold text-paper">You're showing a balanced approach to saving and spending.</p></div><div className="border-l-8 border-hot pl-5"><p className="font-mono text-xs uppercase tracking-widest text-hot">↗ Growth area</p><p className="mt-2 text-xl font-semibold text-paper">Strengthen your long-term investment planning.</p></div></div></section>
-
-      <section className="neo-lg mt-14 bg-acid p-6 text-ink sm:p-10">
-        <p className="font-mono text-xs uppercase tracking-[0.3em]">Your next challenge</p><h2 className="mt-2 font-display text-5xl leading-none tracking-wide sm:text-6xl">INVESTMENT & GOAL PLANNING</h2><p className="mt-4 max-w-2xl text-lg font-semibold">Your profile shows a balanced financial approach. Let's see how you handle a long-term financial decision.</p><p className="mt-6 font-mono text-xs uppercase tracking-widest">Why this scenario?</p><p className="mt-1 text-sm font-medium">Recommended based on your current financial behaviour.</p>
-        <Link to="/play/$scenarioId" params={{ scenarioId: twin.recommendedScenarioId }} className="press neo mt-7 inline-block bg-ink px-7 py-4 font-display text-2xl tracking-wide text-acid">PLAY THIS CHALLENGE →</Link>
+      <Rule />
+      <section className="relative">
+        <p className="font-mono text-xs uppercase tracking-[0.3em] text-hot">Your next challenge</p>
+        <h2 className="mt-3 font-display text-6xl leading-[0.85] tracking-wide text-paper sm:text-8xl lg:text-9xl">INVESTMENT &<br /><span className="text-acid">GOAL PLANNING</span></h2>
+        <p className="mt-6 max-w-2xl text-lg font-medium text-paper/80">Your profile shows a balanced financial approach. Let's see how you handle a long-term financial decision.</p>
+        <p className="mt-6 font-mono text-xs uppercase tracking-widest text-paper/50">Why this scenario?</p>
+        <p className="mt-1 text-sm text-paper/70">Recommended based on your current financial behaviour.</p>
+        <Link to="/play/$scenarioId" params={{ scenarioId: twin.recommendedScenarioId }} className="press neo-lg mt-10 inline-block bg-acid px-8 py-5 font-display text-3xl tracking-wide text-ink sm:text-4xl">PLAY THIS CHALLENGE →</Link>
       </section>
-      <section className="mt-14 text-center"><p className="font-mono text-xs uppercase tracking-[0.3em] text-paper/50">Your twin will evolve</p><div className="mt-4 flex flex-col items-center justify-center gap-2 font-display text-2xl tracking-wide text-paper sm:flex-row sm:gap-5"><span>PLAY</span><span className="text-acid">↓</span><span>DECIDE</span><span className="text-hot">↓</span><span>EVOLVE</span></div><p className="mt-3 text-sm text-paper/50">Play scenarios → make decisions → discover more about your financial behaviour.</p></section>
-      <Button variant="link" onClick={onRebuild} className="mt-8 text-paper/50">Rebuild my twin</Button>
+
+      <Rule />
+      <section className="text-center">
+        <p className="font-mono text-xs uppercase tracking-[0.3em] text-paper/50">Your twin evolves as you play</p>
+        <div className="mt-3 flex items-center justify-center gap-3 font-display text-2xl tracking-wide text-paper sm:gap-5"><span>PLAY</span><span className="text-acid">→</span><span>DECIDE</span><span className="text-hot">→</span><span>EVOLVE</span></div>
+        <Button variant="link" onClick={onRebuild} className="mt-6 text-paper/50">Rebuild my twin</Button>
+      </section>
     </Shell>
   );
 }
